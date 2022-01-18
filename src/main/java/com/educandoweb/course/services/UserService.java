@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.DataBaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +37,8 @@ public class UserService {
         userRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
-        } catch(RuntimeException e) {
-            e.printStackTrace();
+        } catch(DataIntegrityViolationException e) {
+            throw new DataBaseException(e.getMessage());
         }
     }
 
