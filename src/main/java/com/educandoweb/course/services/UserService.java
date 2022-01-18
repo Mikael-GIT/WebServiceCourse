@@ -8,6 +8,7 @@ import com.educandoweb.course.repositories.UserRepository;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +31,13 @@ public class UserService {
     }
 
     public void delete(Long id){
+        try {
         userRepository.deleteById(id);
+        } catch(EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        } catch(RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
     public User update(Long id, User obj){
